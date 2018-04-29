@@ -53,13 +53,15 @@ float humidity;
 float pressure;
 int proximity;
 
-int acc_x;
-int acc_y;
-int acc_z;
 
 static List < Integer > accx_array = new ArrayList < Integer > ();
 static List < Integer > accy_array = new ArrayList < Integer > ();
 static List < Integer > accz_array = new ArrayList < Integer > ();
+
+static List < Integer > gyrx_array = new ArrayList < Integer > ();
+static List < Integer > gyry_array = new ArrayList < Integer > ();
+static List < Integer > gyrz_array = new ArrayList < Integer > ();
+
 
 int p;
 int side = 0;
@@ -87,7 +89,7 @@ void setup() {
   udp.listen(true);
 
   size(400, 400, P3D);//  size(displayWidth, displayHeight, P3D);
-  cube = new L3D(this); //  cube=new L3D(this, "your@spark.email", "your password", "cube name");
+  cube = new L3D(this,100,100,100); //  cube=new L3D(this, "your@spark.email", "your password", "cube name");
 
   //logo = loadImage("stlogo.png");
 
@@ -142,6 +144,7 @@ void draw() {
 
   cube.background(0);
   //translate(200, -10);
+  //mode = T2_MODE;
   switch (mode) {
 
     case (SPIKE_MODE):
@@ -152,12 +155,14 @@ void draw() {
     case (L2_MODE):
 
     message = "T";
-    cube.scrollText(message, new PVector(-2, 0, 2), cube.colorMap( 0, frameCount%1000, 1000));
-    cube.scrollText(message, new PVector(-2, 0, 3), cube.colorMap( 0, frameCount%1000, 1000));
+    cube.scrollText(message, new PVector(-2, 0, 0), cube.colorMap( frameCount*3%600, 0, 600));
+    cube.scrollText(message, new PVector(-2, 0, 1), cube.colorMap( frameCount*2%600, 0, 600));
+    cube.scrollText(message, new PVector(-2, 0, 2), cube.colorMap( frameCount%600, 0, 600));
 
     message = "S";
-    cube.scrollText(message, new PVector(0, -1, 6), cube.colorMap(frameCount%1000, 0, 1000));
-    cube.scrollText(message, new PVector(0, -1, 7), cube.colorMap(frameCount%1000, 0, 1000));
+    cube.scrollText(message, new PVector(0, -1, 5), cube.colorMap( frameCount%600, 0, 600));
+    cube.scrollText(message, new PVector(0, -1, 6), cube.colorMap( frameCount*2%600, 0, 600));
+    cube.scrollText(message, new PVector(0, -1, 7), cube.colorMap( frameCount*3%600, 0, 600));
     break;
 
     case (T1_MODE):
@@ -165,9 +170,9 @@ void draw() {
     break;
     case (T2_MODE):
     message = "Temperature";
-    cube.scrollText(message, new PVector(pos, 0, 2), cube.colorMap( 0, frameCount%1000, 1000));
+    cube.scrollText(message, new PVector(pos, 0, 2), cube.colorMap( frameCount%500, 0, 1000));
     message = (temperature+" C");
-    cube.marquis(message, pos, cube.colorMap(frameCount % 1000, 0, 1000));
+    cube.marquis(message, pos, cube.colorMap(500+frameCount%500, 0, 1000));
     break;
 
     case (H1_MODE):
@@ -175,9 +180,9 @@ void draw() {
     break;
     case (H2_MODE):
     message = "H";
-    cube.scrollText(message, new PVector(-1, 0, pos%8), cube.colorMap( 1000, frameCount%1000, 0));
+    cube.scrollText(message, new PVector(-1, 0, pos%8), cube.colorMap( frameCount%500, 0, 1000));
     message = (humidity+"%RH");
-    cube.scrollText(message, new PVector(pos, 0, 4), cube.colorMap(frameCount % 1000, 0, 1000));
+    cube.scrollText(message, new PVector(pos, 0, 4), cube.colorMap(500+frameCount%500, 0, 1000));
     break;
 
     case (P1_MODE):
@@ -187,7 +192,7 @@ void draw() {
     message = ("Pressure");
     cube.scrollSpinningText(message, new PVector(pos, 0, 3), cube.colorMap(frameCount % 1000, 0, 1000));
     message = (""+pressure);
-    cube.marquis(message, pos, cube.colorMap( 0, 0, frameCount % 1000));
+    cube.marquis(message, pos, cube.colorMap(frameCount*2 % 1000, 0, 1000));
 
     break;
 
@@ -295,21 +300,20 @@ void text(String[] info, PVector origin) {
 }
 
 void accWave() {
-  for (int i = accx_array.size() - 1; i >= 0; i--) {
-    int x = accx_array.get(i);
+  int x;
+  for (int i = 7; i >= 0; i--) {
+    x = accx_array.get(i);
     cube.setVoxel(new PVector(i, 4 - x, 0), cube.colorMap(4-x, 4, cube.side));
-    cube.setVoxel(new PVector(i, 4 - x, 1), cube.colorMap(4-x, 4, cube.side));
-  }
+    x = accy_array.get(i);
+    cube.setVoxel(new PVector(i, 4 - x, 1), cube.colorMap(4-x, cube.side, 0));
+    x = accz_array.get(i);
+    cube.setVoxel(new PVector(i, 4 - x, 2), cube.colorMap(4-x, 0, cube.side));
 
-  for (int i = accy_array.size() - 1; i >= 0; i--) {
-    int x = accy_array.get(i);
-    cube.setVoxel(new PVector(i, 4 - x, 3), cube.colorMap(4-x, cube.side, 0));
-    cube.setVoxel(new PVector(i, 4 - x, 4), cube.colorMap(4-x, cube.side, 0));
-  }
-
-  for (int i = accz_array.size() - 1; i >= 0; i--) {
-    int x = accz_array.get(i);
-    cube.setVoxel(new PVector(i, 4 - x, 6), cube.colorMap(4-x, 0, cube.side));
+    x = gyrx_array.get(i);
+    cube.setVoxel(new PVector(i, 4 - x, 5), cube.colorMap(4-x, 4, cube.side));
+    x = gyry_array.get(i);
+    cube.setVoxel(new PVector(i, 4 - x, 6), cube.colorMap(4-x, cube.side, 0));
+    x = gyrz_array.get(i);
     cube.setVoxel(new PVector(i, 4 - x, 7), cube.colorMap(4-x, 0, cube.side));
   }
 }
@@ -442,6 +446,31 @@ color complement(color original) {
 
 int proximity_status = 0;
 int acc_status = 0;
+
+void motionDecode(JSONObject json, String name, List < Integer > motion_array, int step) {
+  int x = json.getInt(name)/step;
+  //  println(name + x);
+  motion_array.add(x);
+
+  if (motion_array.size() > 8) {
+    motion_array.remove(0);
+    if (motion_array.get(6)!=motion_array.get(7))
+    {
+      mode = ACC_MODE;
+      acc_status =0;
+    } else
+    {
+      acc_status++;
+      if (acc_status>60)
+      {
+        if (mode == ACC_MODE)
+        {
+          mode = SPIKE_MODE;
+        }
+      }
+    }
+  }
+}
 void receive(byte[] data, String ip, int port) {
 
   data = subset(data, 0, data.length);
@@ -474,81 +503,23 @@ void receive(byte[] data, String ip, int port) {
     }
   }
 
+  motionDecode(json, "acc_x", accx_array, 300 );
+  motionDecode(json, "acc_y", accy_array, 300 );
+  motionDecode(json, "acc_z", accz_array, 300 );
 
-  acc_x = json.getInt("acc_x");
-  accx_array.add(acc_x / 300);
-  if (accx_array.size() > 8) {
-    accx_array.remove(0);
-    if (accx_array.get(6)!=accx_array.get(7))
-    {
-      mode = ACC_MODE;
-      acc_status =0;
-    } else
-    {
-      acc_status++;
-      if (acc_status>30)
-      {
-        if (mode == ACC_MODE)
-        {
-          mode = SPIKE_MODE;
-        }
-      }
-    }
-  }
-
-  acc_y = json.getInt("acc_y");
-  accy_array.add(acc_y / 300);
-  if (accy_array.size() > 8) {
-    accy_array.remove(0);
-    if (accy_array.get(6)!=accy_array.get(7))
-    {
-      mode = ACC_MODE;
-      acc_status =0;
-    } else
-    {
-      acc_status++;
-      if (acc_status>30)
-      {
-        if (mode == ACC_MODE)
-        {
-          mode = SPIKE_MODE;
-        }
-      }
-    }
-  }
-
-  acc_z = json.getInt("acc_z");
-  accz_array.add(acc_z / 300);
-  if (accz_array.size() > 8) {
-    accz_array.remove(0);
-    if (accz_array.get(6)!=accz_array.get(7))
-    {
-      mode = ACC_MODE;
-      acc_status =0;
-    } else
-    {
-      acc_status++;
-      if (acc_status>30)
-      {
-        if (mode == ACC_MODE)
-        {
-          mode = SPIKE_MODE;
-        }
-      }
-    }
-  }
+  motionDecode(json, "gyr_x", gyrx_array, 90000 );
+  motionDecode(json, "gyr_y", gyry_array, 90000 );
+  motionDecode(json, "gyr_z", gyrz_array, 90000);
 
 
- //println(atan2(json.getInt("mag_y"), json.getInt("mag_x"))*57.2958);
-
-  println("receive: \"" + message + "\" from " + ip + " on port " + port);
-  println("temperature ====== " + temperature);
-  println("humidity ====== " + humidity);
-  println("pressure ====== " + pressure);
-  println("proximity ====== " + proximity);
-
-  println("acc_x " + acc_x);
-  println("acc_y " + acc_y);
-  println("acc_z " + acc_z);
-
+  /*
+  //println(atan2(json.getInt("mag_y"), json.getInt("mag_x"))*57.2958);
+   
+   println("receive: \"" + message + "\" from " + ip + " on port " + port);
+   println("temperature ====== " + temperature);
+   println("humidity ====== " + humidity);
+   println("pressure ====== " + pressure);
+   println("proximity ====== " + proximity);
+   
+   */
 }
