@@ -89,7 +89,7 @@ void setup() {
   udp.listen(true);
 
   size(400, 400, P3D);//  size(displayWidth, displayHeight, P3D);
-  cube = new L3D(this,100,100,100); //  cube=new L3D(this, "your@spark.email", "your password", "cube name");
+  cube = new L3D(this); //  cube=new L3D(this, "your@spark.email", "your password", "cube name");
 
   //logo = loadImage("stlogo.png");
 
