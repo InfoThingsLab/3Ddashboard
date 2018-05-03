@@ -10,10 +10,9 @@
 4. Install cutecom for sensor board setting.
   sudo apt-get update
   sudo apt-get install cutecom
-  
-  #Serial port errors 'Permission denied'
-  #id -Gn
-  #sudo adduser user dialout
+  * Serial port errors 'Permission denied'
+  * id -Gn
+  * sudo adduser user dialout
 
 5. pm install --save firebase
   
