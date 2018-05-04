@@ -1,15 +1,6 @@
 import hypermedia.net.*;
 import L3D.*;
 import java.util.List;
-/*
-import meter.*;
- Meter mC, mH;
- final int minInC = 0;
- final int maxInC = 50;
- final int minInH = 20;
- final int maxInH = 90;
- */
-
 
 
 float offset=0;
@@ -77,12 +68,6 @@ color sphereColor;
 
 
 
-String[] info = {
-  "ST Sensor Demo", 
-};
-
-PFont f;
-
 void setup() {
 
   udp = new UDP(this, 3333, "224.0.0.1"); 
@@ -90,61 +75,12 @@ void setup() {
 
   size(400, 400, P3D);//  size(displayWidth, displayHeight, P3D);
   cube = new L3D(this); //  cube=new L3D(this, "your@spark.email", "your password", "cube name");
-
-  //logo = loadImage("stlogo.png");
-
-  //surface.setVisible(false);
-
-
-  /*
-  f = createFont("Arial", 16, true);
-   
-   // Centegrade Temperature Meter
-   mC = new Meter(this, 10, 100); 
-   mC.setMeterWidth(300);
-   String[] scaleLabelsC = {"0.0", "10.0", "20.0", "30.0", "40.0", "50.0"};
-   mC.setScaleLabels(scaleLabelsC);
-   mC.setUp(minInC, maxInC, 0.0f, 50.0f, 180.0f, 360.0f);
-   mC.setTitle("Centegrade" + "\u00B0");  // Added the degree symbol
-   mC.setInformationAreaText("Temperature = %.2f\u00B0");
-   mC.setDisplayDigitalMeterValue(true);
-   mC.updateMeter(20);
-   
-   d   // Humity Meter
-   mH = new Meter(this, 10, 400); 
-   mH.setMeterWidth(300);
-   mH.setUp(minInH, maxInH, 20.0f, 90.0f, 180.0f, 360.0f);
-   mH.setTitle("Humidity %");
-   String[] scaleLabelsH = {"20", "30", "40", "50", "60", "70", "80", "90"};
-   mH.setScaleLabels(scaleLabelsH);
-   mH.setDisplayDigitalMeterValue(true);
-   mH.updateMeter(50);
-   */
 }
 
 void draw() {
-  background(150);
-
-  //image(logo, 0, 0);
-  /*
-  fill(255);
-   textSize(48);
-   textFont(f, 16);
-   textAlign(LEFT);
-   text("The Temperature is " + temperature, 300, 300, 0);
-   text("The Humidity is " + humidity, 300, 320, 0);
-   text("The Pressure is " + pressure, 300, 340, 0);
-   text("The Proximity is " + proximity, 300, 360, 0);
-   text(info, new PVector(0, 100, 0));
-   
-   
-   mC.updateMeter(int(temperature));
-   mH.updateMeter(int(humidity));
-   */
-
+  background(0);
   cube.background(0);
-  //translate(200, -10);
-  //mode = T2_MODE;
+
   switch (mode) {
 
     case (SPIKE_MODE):
@@ -318,131 +254,50 @@ void accWave() {
   }
 }
 
+void receive(byte[] data, String ip, int port) {
 
-void newhumidity() {
+  data = subset(data, 0, data.length);
+  String sdata = new String(data);
+  JSONObject json = parseJSONObject(sdata);
+  if (!json.isNull("temperature")) {
+    temperature = json.getFloat("temperature");
+    humidity = json.getFloat("humidity");
+    pressure = json.getFloat("pressure");
 
-  center = new PVector(3, 3, 0);
-  popRadius = random(cube.side); //how big the sphere will be when it pops
-  //speed=0.01+random(0.1);  //how fast the sphere will grow.  
-  sphereColor = color(random(255), random(255), random(255));
-}
-
-
-
-void newproximity(PVector topLeft, int side, color col) {
-  int p = proximity / 249;
-  if (p > 7) {
-    p = 7;
-  }
-  PVector[] topPoints = new PVector[4];
-  PVector[] bottomPoints = new PVector[4];
-  topPoints[0] = topLeft;
-  topPoints[1] = new PVector(topLeft.x + p, topLeft.y, topLeft.z);
-  topPoints[2] = new PVector(topLeft.x + p, topLeft.y + p, topLeft.z);
-  topPoints[3] = new PVector(topLeft.x, topLeft.y + p, topLeft.z);
-  PVector bottomLeft = new PVector(topLeft.x, topLeft.y, topLeft.z + p);
-  bottomPoints[0] = bottomLeft;
-  bottomPoints[1] = new PVector(bottomLeft.x + p, bottomLeft.y, bottomLeft.z);
-  bottomPoints[2] = new PVector(bottomLeft.x + p, bottomLeft.y + p, bottomLeft.z);
-  bottomPoints[3] = new PVector(bottomLeft.x, bottomLeft.y + p, bottomLeft.z);
-  for (int i = 0; i < 4; i++) {
-    drawLine(topPoints[i], bottomPoints[i], col);
-    drawLine(topPoints[i], topPoints[(i + 1) % 4], col);
-    drawLine(bottomPoints[i], bottomPoints[(i + 1) % 4], col);
-  }
-  color complement = complement(col);
-  for (int i = 0; i < 4; i++) {
-    cube.setVoxel(topPoints[i], complement);
-    cube.setVoxel(bottomPoints[i], complement);
-  }
-}
-void drawLine(PVector p1, PVector p2, color col) {
-  float dx, dy, dz, l, m, n, dx2, dy2, dz2, i, x_inc, y_inc, z_inc, err_1, err_2;
-  PVector currentPoint = new PVector(p1.x, p1.y, p1.z);
-  dx = p2.x - p1.x;
-  dy = p2.y - p1.y;
-  dz = p2.z - p1.z;
-  x_inc = (dx < 0) ? -1 : 1;
-  l = Math.abs(dx);
-  y_inc = (dy < 0) ? -1 : 1;
-  m = Math.abs(dy);
-  z_inc = (dz < 0) ? -1 : 1;
-  n = Math.abs(dz);
-  dx2 = l * 2;
-  dy2 = m * 2;
-  dz2 = n * 2;
-
-  if ((l >= m) && (l >= n)) {
-    err_1 = dy2 - l;
-    err_2 = dz2 - l;
-    for (i = 0; i < l; i++) {
-      mixVoxel(currentPoint, col);
-      if (err_1 > 0) {
-        currentPoint.y += y_inc;
-        err_1 -= dx2;
-      }
-      if (err_2 > 0) {
-        currentPoint.z += z_inc;
-        err_2 -= dx2;
-      }
-      err_1 += dy2;
-      err_2 += dz2;
-      currentPoint.x += x_inc;
+    proximity = json.getInt("proximity");
+    //(proximity <400 for 5 times )=proximity mode
+    if (proximity<400)
+    {
+      proximity_status++;
+    } else
+    {
+      proximity_status = 0;
     }
-  } else if ((m >= l) && (m >= n)) {
-    err_1 = dx2 - m;
-    err_2 = dz2 - m;
-    for (i = 0; i < m; i++) {
-      mixVoxel(currentPoint, col);
-      if (err_1 > 0) {
-        currentPoint.x += x_inc;
-        err_1 -= dy2;
+    if (proximity_status > 5)
+    {
+      if (mode != ACC_MODE)
+      {
+        mode = PROXIMITY_MODE;
       }
-      if (err_2 > 0) {
-        currentPoint.z += z_inc;
-        err_2 -= dy2;
+    } else
+    {
+      if (mode==PROXIMITY_MODE)
+      {
+        mode = 1;
       }
-      err_1 += dx2;
-      err_2 += dz2;
-      currentPoint.y += y_inc;
     }
+
+    motionDecode(json, "acc_x", accx_array, 300 );
+    motionDecode(json, "acc_y", accy_array, 300 );
+    motionDecode(json, "acc_z", accz_array, 300 );
+
+    motionDecode(json, "gyr_x", gyrx_array, 90000 );
+    motionDecode(json, "gyr_y", gyry_array, 90000 );
+    motionDecode(json, "gyr_z", gyrz_array, 90000);
   } else {
-    err_1 = dy2 - n;
-    err_2 = dx2 - n;
-    for (i = 0; i < n; i++) {
-      mixVoxel(currentPoint, col);
-      if (err_1 > 0) {
-        currentPoint.y += y_inc;
-        err_1 -= dz2;
-      }
-      if (err_2 > 0) {
-        currentPoint.x += x_inc;
-        err_2 -= dz2;
-      }
-      err_1 += dy2;
-      err_2 += dx2;
-      currentPoint.z += z_inc;
-    }
+    println(sdata);
   }
 }
-
-void mixVoxel(PVector currentPoint, color col) {
-  color currentCol = cube.getVoxel(currentPoint);
-  color newCol = color(red(currentCol) + red(col), green(currentCol) + green(col), blue(currentCol) + blue(col));
-  cube.setVoxel(currentPoint, newCol);
-}
-
-color complement(color original) {
-  float R = red(original);
-  float G = green(original);
-  float B = blue(original);
-  float minRGB = min(R, min(G, B));
-  float maxRGB = max(R, max(G, B));
-  float minPlusMax = minRGB + maxRGB;
-  color complement = color(minPlusMax - R, minPlusMax - G, minPlusMax - B);
-  return complement;
-}
-
 
 int proximity_status = 0;
 int acc_status = 0;
@@ -470,56 +325,4 @@ void motionDecode(JSONObject json, String name, List < Integer > motion_array, i
       }
     }
   }
-}
-void receive(byte[] data, String ip, int port) {
-
-  data = subset(data, 0, data.length);
-  String message = new String(data);
-  JSONObject json = parseJSONObject(message);
-  temperature = json.getFloat("temperature");
-  humidity = json.getFloat("humidity");
-  pressure = json.getFloat("pressure");
-
-  proximity = json.getInt("proximity");
-  //(proximity <400 for 5 times )=proximity mode
-  if (proximity<400)
-  {
-    proximity_status++;
-  } else
-  {
-    proximity_status = 0;
-  }
-  if (proximity_status > 5)
-  {
-    if (mode != ACC_MODE)
-    {
-      mode = PROXIMITY_MODE;
-    }
-  } else
-  {
-    if (mode==PROXIMITY_MODE)
-    {
-      mode = 1;
-    }
-  }
-
-  motionDecode(json, "acc_x", accx_array, 300 );
-  motionDecode(json, "acc_y", accy_array, 300 );
-  motionDecode(json, "acc_z", accz_array, 300 );
-
-  motionDecode(json, "gyr_x", gyrx_array, 90000 );
-  motionDecode(json, "gyr_y", gyry_array, 90000 );
-  motionDecode(json, "gyr_z", gyrz_array, 90000);
-
-
-  /*
-  //println(atan2(json.getInt("mag_y"), json.getInt("mag_x"))*57.2958);
-   
-   println("receive: \"" + message + "\" from " + ip + " on port " + port);
-   println("temperature ====== " + temperature);
-   println("humidity ====== " + humidity);
-   println("pressure ====== " + pressure);
-   println("proximity ====== " + proximity);
-   
-   */
 }
