@@ -1,3 +1,16 @@
+const dgram = require('dgram');
+const client = dgram.createSocket('udp4');
+
+const host = '127.0.0.1';
+const port = 3333;
+
+
+
+client.on('message', (message, remote) => {
+    console.log('Server: ' + message);
+});
+
+
 var firebase = require('firebase');
 
 firebase.initializeApp({
@@ -7,7 +20,17 @@ firebase.initializeApp({
 
 firebase.database().ref('/').on('value', function (snapshot) {
     console.log(snapshot.val()['alexa']);
+    var message = JSON.stringify(snapshot.val()['alexa']);
+    client.send(message, 0, message.length, port, host, (err, bytes) => {
+        if (err) {
+            throw err;
+        }
+
+        console.log('Message sent');
+    });
+
 });
+
 
 /*
 firebase.database().ref().child("hello") // creates a key called hello
