@@ -263,6 +263,7 @@ void accWave() {
   }
 }
 
+void receive(byte[] data, String ip, int port) {
 
 int proximity_status = 0;
 int acc_status = 0;
