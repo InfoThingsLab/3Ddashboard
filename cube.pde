@@ -263,14 +263,12 @@ void accWave() {
   }
 }
 
-void receive(byte[] data, String ip, int port) {
 
 int proximity_status = 0;
 int acc_status = 0;
 
 void motionDecode(JSONObject json, String name, List < Integer > motion_array, int step) {
   int x = json.getInt(name)/step;
-  //  println(name + x);
   motion_array.add(x);
 
   if (motion_array.size() > 8) {
@@ -336,11 +334,14 @@ void receive(byte[] data, String ip, int port) {
   } else {
     String command = json.getString("command");
     String slot = json.getString("slot");
+
     if (command.equals("welcome"))
     {
       mode = ALEXA_WELCOME_MODE;
+      pos = 0;
     } else if (command.equals("show"))
     {
+      pos = 0;
       if (slot.equals("love"))
       {
         mode = L1_MODE;
