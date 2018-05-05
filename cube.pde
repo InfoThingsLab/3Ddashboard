@@ -27,8 +27,11 @@ final int H2_MODE = 6;
 
 final int P1_MODE = 7;
 final int P2_MODE = 8;
+final int TEXT_MODE_END = 9;
 
-final int TEXT_MODE_END = P2_MODE +1;
+final int ALEXA_WELCOME_MODE = 10;
+final int ALEXA_PLAY_MODE = 11;
+final int ALEXA_END_MODE = 12;
 
 final int ACC_MODE = 20;
 final int PROXIMITY_MODE = 21;
@@ -70,7 +73,6 @@ color sphereColor;
 
 void setup() {
 
-  launch("/firecontrol/node sub");
   udp = new UDP(this, 3333, "224.0.0.1"); 
   udp.listen(true);
 
@@ -130,6 +132,12 @@ void draw() {
     cube.scrollSpinningText(message, new PVector(pos, 0, 3), cube.colorMap(frameCount % 1000, 0, 1000));
     message = (""+pressure);
     cube.marquis(message, pos, cube.colorMap(frameCount*2 % 1000, 0, 1000));
+    break;
+
+    case (ALEXA_WELCOME_MODE):
+    message = "Welcome to ST Alexa";
+    cube.background(cube.colorMap(frameCount % 500, 0, 1000));
+    cube.marquis(message, pos, color(0, 0, 255));
 
     break;
 
@@ -153,7 +161,7 @@ void draw() {
     {
       mode++;
     }
-    if (mode == TEXT_MODE_END)
+    if ((mode >= TEXT_MODE_END)&&(mode < ACC_MODE))
     {
       mode = 0;
     }
@@ -255,6 +263,35 @@ void accWave() {
   }
 }
 
+
+int proximity_status = 0;
+int acc_status = 0;
+
+void motionDecode(JSONObject json, String name, List < Integer > motion_array, int step) {
+  int x = json.getInt(name)/step;
+  //  println(name + x);
+  motion_array.add(x);
+
+  if (motion_array.size() > 8) {
+    motion_array.remove(0);
+    if (motion_array.get(6)!=motion_array.get(7))
+    {
+      mode = ACC_MODE;
+      acc_status =0;
+    } else
+    {
+      acc_status++;
+      if (acc_status>60)
+      {
+        if (mode == ACC_MODE)
+        {
+          mode = SPIKE_MODE;
+        }
+      }
+    }
+  }
+}
+
 void receive(byte[] data, String ip, int port) {
 
   data = subset(data, 0, data.length);
@@ -296,34 +333,42 @@ void receive(byte[] data, String ip, int port) {
     motionDecode(json, "gyr_y", gyry_array, 90000 );
     motionDecode(json, "gyr_z", gyrz_array, 90000);
   } else {
-    println(sdata);
-  }
-}
-
-int proximity_status = 0;
-int acc_status = 0;
-
-void motionDecode(JSONObject json, String name, List < Integer > motion_array, int step) {
-  int x = json.getInt(name)/step;
-  //  println(name + x);
-  motion_array.add(x);
-
-  if (motion_array.size() > 8) {
-    motion_array.remove(0);
-    if (motion_array.get(6)!=motion_array.get(7))
+    String command = json.getString("command");
+    String slot = json.getString("slot");
+    if (command.equals("welcome"))
     {
-      mode = ACC_MODE;
-      acc_status =0;
-    } else
+      mode = ALEXA_WELCOME_MODE;
+    } else if (command.equals("show"))
     {
-      acc_status++;
-      if (acc_status>60)
+      if (slot.equals("love"))
       {
-        if (mode == ACC_MODE)
-        {
-          mode = SPIKE_MODE;
-        }
+        mode = L1_MODE;
+      } else if (slot.equals("temperature"))
+      {
+        mode = T2_MODE;
+      } else if (slot.equals("humidity"))
+      {
+        mode = H2_MODE;
+      } else if (slot.equals("pressure"))
+      {
+        mode = P2_MODE;
+      } else if (slot.equals("motion"))
+      {
+        mode = ACC_MODE;
+      } else if (slot.equals("proximity"))
+      {
+        mode = PROXIMITY_MODE;
+      } else if (slot.equals("sine"))
+      {
+        mode = T1_MODE;
+      } else if (slot.equals("spiky"))
+      {
+        mode = SPIKE_MODE;
+      } else if (slot.equals("ripple"))
+      {
+        mode = P1_MODE;
       }
     }
   }
+  println(sdata);
 }
