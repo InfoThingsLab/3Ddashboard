@@ -1,0 +1,2 @@
+node ./firecontrol/sub &
+processing-java --sketch=/home/joe/Desktop/processing-3.3.7/cubedashboard/cube --run

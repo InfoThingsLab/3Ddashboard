@@ -105,9 +105,9 @@ void draw() {
     break;
 
     case (T1_MODE):
-    sinusoid();
+    sinusoid(); 
     break;
-    case (T2_MODE):
+    case (T2_MODE): 
     message = "Temperature";
     cube.scrollText(message, new PVector(pos, 0, 2), cube.colorMap( frameCount%500, 0, 1000));
     message = (temperature+" C");

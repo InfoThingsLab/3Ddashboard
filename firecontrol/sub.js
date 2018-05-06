@@ -19,14 +19,14 @@ firebase.initializeApp({
 
 
 firebase.database().ref('/').on('value', function (snapshot) {
-    console.log(snapshot.val()['alexa']);
     var message = JSON.stringify(snapshot.val()['alexa']);
+    console.log("[sub]   " + 　message);
     client.send(message, 0, message.length, port, host, (err, bytes) => {
         if (err) {
             throw err;
         }
 
-        console.log('Message sent');
+        //console.log('Message sent');
     });
 
 });
