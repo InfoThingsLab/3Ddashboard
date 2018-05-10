@@ -1,6 +1,7 @@
 import hypermedia.net.*;
 import L3D.*;
 import java.util.List;
+import java.util.Arrays;
 
 
 float offset=0;
@@ -17,17 +18,17 @@ int mode = 0;
 
 final int SPIKE_MODE = 0;
 final int L1_MODE = 1;
-final int L2_MODE = 2;
+//final int L2_MODE = 2;
 
-final int T1_MODE = 3;
-final int T2_MODE = 4;
+final int T1_MODE = 2;
+final int T2_MODE = 3;
 
-final int H1_MODE = 5;
-final int H2_MODE = 6;
+final int H1_MODE = 4;
+final int H2_MODE = 5;
 
-final int P1_MODE = 7;
-final int P2_MODE = 8;
-final int TEXT_MODE_END = 9;
+final int P1_MODE = 6;
+final int P2_MODE = 7;
+final int TEXT_MODE_END = 8;
 
 final int ALEXA_WELCOME_MODE = 10;
 final int ALEXA_PLAY_MODE = 11;
@@ -42,19 +43,19 @@ final int PROXIMITY_MODE = 21;
 String message = " ";
 PImage logo;
 
-float temperature;
-float humidity;
-float pressure;
-int proximity;
+float temperature=26;
+float humidity=80;
+float pressure=1000;
+int proximity=0;
 
 
-static List < Integer > accx_array = new ArrayList < Integer > ();
-static List < Integer > accy_array = new ArrayList < Integer > ();
-static List < Integer > accz_array = new ArrayList < Integer > ();
+static List < Integer > accx_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
+static List < Integer > accy_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
+static List < Integer > accz_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
 
-static List < Integer > gyrx_array = new ArrayList < Integer > ();
-static List < Integer > gyry_array = new ArrayList < Integer > ();
-static List < Integer > gyrz_array = new ArrayList < Integer > ();
+static List < Integer > gyrx_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
+static List < Integer > gyry_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
+static List < Integer > gyrz_array = new ArrayList < Integer > (Arrays.asList(0,0,0,0,0,0,0,0));
 
 
 int p;
@@ -81,7 +82,7 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(102);
   cube.background(0);
 
   switch (mode) {
@@ -91,17 +92,11 @@ void draw() {
     break;
 
     case (L1_MODE):
-    case (L2_MODE):
+    //case (L2_MODE):
 
-    message = "T";
-    cube.scrollText(message, new PVector(-2, 0, 0), cube.colorMap( frameCount*3%600, 0, 600));
-    cube.scrollText(message, new PVector(-2, 0, 1), cube.colorMap( frameCount*2%600, 0, 600));
-    cube.scrollText(message, new PVector(-2, 0, 2), cube.colorMap( frameCount%600, 0, 600));
-
-    message = "S";
-    cube.scrollText(message, new PVector(0, -1, 5), cube.colorMap( frameCount%600, 0, 600));
-    cube.scrollText(message, new PVector(0, -1, 6), cube.colorMap( frameCount*2%600, 0, 600));
-    cube.scrollText(message, new PVector(0, -1, 7), cube.colorMap( frameCount*3%600, 0, 600));
+    heartDraw();
+    message = ("RESMED ST 10 Year");
+    cube.marquis(message, pos, color(0, 0, 255));
     break;
 
     case (T1_MODE):
@@ -166,6 +161,81 @@ void draw() {
       mode = 0;
     }
   }
+}
+
+void stDraw()
+{
+  message = "T";
+  cube.scrollText(message, new PVector(-2, 0, 0), cube.colorMap( frameCount*3%600, 0, 600));
+  cube.scrollText(message, new PVector(-2, 0, 1), cube.colorMap( frameCount*2%600, 0, 600));
+  cube.scrollText(message, new PVector(-2, 0, 2), cube.colorMap( frameCount%600, 0, 600));
+
+  message = "S";
+  cube.scrollText(message, new PVector(0, -1, 5), cube.colorMap( frameCount%600, 0, 600));
+  cube.scrollText(message, new PVector(0, -1, 6), cube.colorMap( frameCount*2%600, 0, 600));
+  cube.scrollText(message, new PVector(0, -1, 7), cube.colorMap( frameCount*3%600, 0, 600));
+}
+void heartDraw()
+{
+  cube.setVoxel(1, 5, 3, color(255, 0, 0));
+  cube.setVoxel(1, 4, 3, color(255, 0, 0));
+  cube.setVoxel(2, 3, 3, color(255, 0, 0));
+  cube.setVoxel(3, 2, 3, color(255, 0, 0));
+  cube.setVoxel(4, 1, 3, color(255, 0, 0));
+  cube.setVoxel(5, 2, 3, color(255, 0, 0));
+  cube.setVoxel(6, 3, 3, color(255, 0, 0));
+  cube.setVoxel(7, 4, 3, color(255, 0, 0));
+  cube.setVoxel(7, 5, 3, color(255, 0, 0));
+  cube.setVoxel(6, 6, 3, color(255, 0, 0));
+  cube.setVoxel(5, 6, 3, color(255, 0, 0));
+  cube.setVoxel(4, 5, 3, color(255, 0, 0));
+  cube.setVoxel(3, 6, 3, color(255, 0, 0));
+  cube.setVoxel(2, 6, 3, color(255, 0, 0));
+
+  cube.setVoxel(2, 5, 2, color(255, 0, 0));
+  cube.setVoxel(2, 4, 2, color(255, 0, 0));
+  cube.setVoxel(3, 3, 2, color(255, 0, 0));
+  cube.setVoxel(4, 2, 2, color(255, 0, 0));
+  cube.setVoxel(5, 3, 2, color(255, 0, 0));
+  cube.setVoxel(6, 4, 2, color(255, 0, 0));
+  cube.setVoxel(6, 5, 2, color(255, 0, 0));
+  cube.setVoxel(5, 5, 2, color(255, 0, 0));
+  cube.setVoxel(4, 4, 2, color(255, 0, 0));
+  cube.setVoxel(3, 5, 2, color(255, 0, 0));
+
+  cube.setVoxel(4, 3, 1, color(255, 0, 0));
+  cube.setVoxel(3, 4, 1, color(255, 0, 0));
+  cube.setVoxel(5, 4, 1, color(255, 0, 0));
+
+  cube.setVoxel(1, 5, 4, color(255, 0, 0));
+  cube.setVoxel(1, 4, 4, color(255, 0, 0));
+  cube.setVoxel(2, 3, 4, color(255, 0, 0));
+  cube.setVoxel(3, 2, 4, color(255, 0, 0));
+  cube.setVoxel(4, 1, 4, color(255, 0, 0));
+  cube.setVoxel(5, 2, 4, color(255, 0, 0));
+  cube.setVoxel(6, 3, 4, color(255, 0, 0));
+  cube.setVoxel(7, 4, 4, color(255, 0, 0));
+  cube.setVoxel(7, 5, 4, color(255, 0, 0));
+  cube.setVoxel(6, 6, 4, color(255, 0, 0));
+  cube.setVoxel(5, 6, 4, color(255, 0, 0));
+  cube.setVoxel(4, 5, 4, color(255, 0, 0));
+  cube.setVoxel(3, 6, 4, color(255, 0, 0));
+  cube.setVoxel(2, 6, 4, color(255, 0, 0));
+
+  cube.setVoxel(2, 5, 5, color(255, 0, 0));
+  cube.setVoxel(2, 4, 5, color(255, 0, 0));
+  cube.setVoxel(3, 3, 5, color(255, 0, 0));
+  cube.setVoxel(4, 2, 5, color(255, 0, 0));
+  cube.setVoxel(5, 3, 5, color(255, 0, 0));
+  cube.setVoxel(6, 4, 5, color(255, 0, 0));
+  cube.setVoxel(6, 5, 5, color(255, 0, 0));
+  cube.setVoxel(5, 5, 5, color(255, 0, 0));
+  cube.setVoxel(4, 4, 5, color(255, 0, 0));
+  cube.setVoxel(3, 5, 5, color(255, 0, 0));
+
+  cube.setVoxel(4, 3, 6, color(255, 0, 0));
+  cube.setVoxel(3, 4, 6, color(255, 0, 0));
+  cube.setVoxel(5, 4, 6, color(255, 0, 0));
 }
 
 void intersectingCrosses()
@@ -372,5 +442,5 @@ void receive(byte[] data, String ip, int port) {
       }
     }
   }
-  println(sdata);
+  //println(sdata);
 }
