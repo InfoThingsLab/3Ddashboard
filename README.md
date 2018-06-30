@@ -18,7 +18,9 @@
 3. npm install --save firebase  
 
 
-# Sensor Board Setting
+# Sensor Board Setting  
+Hw:  
+    https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html   
 1. Install cutecom for sensor board setting.
 
    sudo apt-get update  
@@ -47,3 +49,10 @@ order to allow the copy-paste from the UNIX type text files. The â€œLocal echoâ€
    Cube firmware:  https://github.com/enjrolas/L3D-Software   
    Cube hardware:  https://github.com/enjrolas/L3D-Hardware   
    Processing library:  https://github.com/enjrolas/L3D-library   
+
+# Voice User Interface  
+1. Hw  
+   https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-eval-tools/stm32-mcu-eval-tools/stm32-mcu-discovery-kits/32f769idiscovery.html   
+2. Sw   
+   https://www.st.com/en/embedded-software/x-cube-vs4a.html  
+   
