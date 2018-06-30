@@ -1,6 +1,7 @@
 # 3Ddashboard
 3D dashboard for STM32 IOT node board
 
+# Gateway
 ## Processing Setting
 1. Install Processing.  
   https://processing.org/download/
@@ -17,7 +18,7 @@
 3. npm install --save firebase  
 
 
-## Sensor Board Setting
+# Sensor Board Setting
 1. Install cutecom for sensor board setting.
 
    sudo apt-get update  
@@ -28,7 +29,7 @@
    sudo adduser user dialout  
 
   
-## 3D Cube Setting
+# 3D Cube Setting
 1. Photon-datasheet  
    https://docs.particle.io/datasheets/photon-(wifi)/photon-datasheet/ 
 2. Getting started  
