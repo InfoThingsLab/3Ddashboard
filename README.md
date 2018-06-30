@@ -29,7 +29,7 @@
 
   
 ## 3D Cube Setting
-1. Photon-datasheet
+1. Photon-datasheet  
    https://docs.particle.io/datasheets/photon-(wifi)/photon-datasheet/ 
 2. Getting started
    https://docs.particle.io/guide/getting-started/intro/photon/ 
