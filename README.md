@@ -30,14 +30,14 @@
   
 ## 3D Cube Setting
 1.Photon-datasheet
-  https://docs.particle.io/datasheets/photon-(wifi)/photon-datasheet/
+  https://docs.particle.io/datasheets/photon-(wifi)/photon-datasheet/ 
 2.Getting started
-  https://docs.particle.io/guide/getting-started/intro/photon/
+  https://docs.particle.io/guide/getting-started/intro/photon/ 
 3.Stream app
-  https://github.com/enjrolas/L3D-Software/blob/master/Streaming/Listener/Listener.ino
+  https://github.com/enjrolas/L3D-Software/blob/master/Streaming/Listener/Listener.ino 
   
 4.Reference
-  https://www.kickstarter.com/projects/lookingglass/l3d-cube-the-3d-led-cube-from-the-future
-  Cube firmware:  https://github.com/enjrolas/L3D-Software
-  Cube hardware:  https://github.com/enjrolas/L3D-Hardware
-  Processing library:  https://github.com/enjrolas/L3D-library
+  https://www.kickstarter.com/projects/lookingglass/l3d-cube-the-3d-led-cube-from-the-future 
+  Cube firmware:  https://github.com/enjrolas/L3D-Software 
+  Cube hardware:  https://github.com/enjrolas/L3D-Hardware 
+  Processing library:  https://github.com/enjrolas/L3D-library 
