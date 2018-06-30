@@ -27,7 +27,12 @@
    if "Serial port errors 'Permission denied' ", solution:   
    id -Gn  
    sudo adduser user dialout  
+2.  The serial port is to be configured with: COM port number, 115200 baud rate, 8-bit data,
+parity none, 1 stop bit and no flow control.  The virtual terminal new-line transmit configuration must be set to LineFeed (\n or LF) in
+order to allow the copy-paste from the UNIX type text files. The “Local echo” option makes copy-paste visible on the console
 
+3.  Ref  
+   https://www.st.com/content/ccc/resource/technical/document/user_manual/group0/9b/f5/d4/e1/17/3f/4d/fa/DM00367435/files/DM00367435.pdf/jcr:content/translations/en.DM00367435.pdf
   
 # 3D Cube Setting
 1. Photon-datasheet  
