@@ -21,7 +21,12 @@
 # Sensor Board Setting  
 1. Hw    
    https://www.st.com/en/evaluation-tools/b-l475e-iot01a.html   
-2. Install cutecom for sensor board setting.
+2. Sw:  B-L475E-IOT01.bin    
+   It is based on X-CUBE-AWS. Instead of sending sensor JSON data by MQTT, it sends sensor data by UDP multicast (Port: 3333, "224.0.0.1").    
+   The user push-button (blue) is used to configure the WiFi credentials. This can be done from the time that the board starts up and up to 3 seconds after that.    
+   https://www.st.com/en/embedded-software/x-cube-aws.html    
+   
+3. Install cutecom for sensor board setting.
 
    sudo apt-get update  
    sudo apt-get install cutecom  
@@ -29,11 +34,10 @@
    if "Serial port errors 'Permission denied' ", solution:   
    id -Gn  
    sudo adduser user dialout  
-3.  The serial port is to be configured with: COM port number, 115200 baud rate, 8-bit data,
-parity none, 1 stop bit and no flow control.  The virtual terminal new-line transmit configuration must be set to LineFeed (\n or LF) in
-order to allow the copy-paste from the UNIX type text files. The “Local echo” option makes copy-paste visible on the console
+4.  The serial port is to be configured with: COM port number, 115200 baud rate, 8-bit data,
+parity none, 1 stop bit and no flow control.  The virtual terminal new-line transmit configuration must be set to LineFeed (\n or LF) in order to allow the copy-paste from the UNIX type text files. The “Local echo” option makes copy-paste visible on the console   
 
-4.  Ref  
+5.  Ref  
    https://www.st.com/content/ccc/resource/technical/document/user_manual/group0/9b/f5/d4/e1/17/3f/4d/fa/DM00367435/files/DM00367435.pdf/jcr:content/translations/en.DM00367435.pdf
   
 # 3D Cube Setting
